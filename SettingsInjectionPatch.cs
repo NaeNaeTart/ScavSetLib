@@ -83,5 +83,17 @@ namespace ScavSetLib
             }
             return true; // Proceed with native localization lookup
         }
+
+        [HarmonyPatch(typeof(Locale), "GetOther")]
+        [HarmonyPrefix]
+        public static bool GetOther_Prefix(string str, ref string __result)
+        {
+            if (str != null && SettingsManager.TryGetLocalization(str, out string localized))
+            {
+                __result = localized;
+                return false; // Skip original game lookup entirely
+            }
+            return true; // Proceed with native localization lookup
+        }
     }
 }

@@ -200,7 +200,8 @@ namespace ScavSetLib
             Action<int> onApply,
             Func<int> valueGetter,
             string cleanName,
-            string[]? cleanChoiceNames = null)
+            string[]? cleanChoiceNames = null,
+            string description = "")
         {
             var def = new DropdownSettingDefinition
             {
@@ -217,6 +218,7 @@ namespace ScavSetLib
 
             // Populate the clean string mappings
             _localizationMap["gameset" + name] = cleanName;
+            _localizationMap["gameset" + name + "dsc"] = description;
             if (choices != null)
             {
                 for (int i = 0; i < choices.Length; i++)
@@ -240,7 +242,8 @@ namespace ScavSetLib
             Action<float> onApply,
             Func<float> valueGetter,
             string cleanName,
-            Func<float, string>? formatValue = null)
+            Func<float, string>? formatValue = null,
+            string description = "")
         {
             var def = new FloatSettingDefinition
             {
@@ -257,6 +260,7 @@ namespace ScavSetLib
             _definitions.Add(def);
 
             _localizationMap["gameset" + name] = cleanName;
+            _localizationMap["gameset" + name + "dsc"] = description;
         }
 
         /// <summary>
@@ -270,7 +274,8 @@ namespace ScavSetLib
             int defaultValue,
             Action<int> onApply,
             Func<int> valueGetter,
-            string cleanName)
+            string cleanName,
+            string description = "")
         {
             var def = new IntSettingDefinition
             {
@@ -286,6 +291,7 @@ namespace ScavSetLib
             _definitions.Add(def);
 
             _localizationMap["gameset" + name] = cleanName;
+            _localizationMap["gameset" + name + "dsc"] = description;
         }
 
         /// <summary>
@@ -297,7 +303,8 @@ namespace ScavSetLib
             bool defaultValue,
             Action<bool> onApply,
             Func<bool> valueGetter,
-            string cleanName)
+            string cleanName,
+            string description = "")
         {
             var def = new BoolSettingDefinition
             {
@@ -311,6 +318,7 @@ namespace ScavSetLib
             _definitions.Add(def);
 
             _localizationMap["gameset" + name] = cleanName;
+            _localizationMap["gameset" + name + "dsc"] = description;
         }
 
         /// <summary>
