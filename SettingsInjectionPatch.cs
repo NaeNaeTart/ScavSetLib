@@ -1,3 +1,4 @@
+using System;
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
@@ -63,6 +64,31 @@ namespace ScavSetLib
         [HarmonyPatch(typeof(Settings), "EnsureLoaded")]
         [HarmonyPostfix]
         public static void EnsureLoaded_Postfix()
+        {
+            var settingsField = typeof(Settings).GetField("settings", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+            if (settingsField != null)
+            {
+                var settingsList = settingsField.GetValue(null) as List<Setting>;
+                if (settingsList != null)
+                {
+                    InjectIntoList(settingsList);
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(Settings), "GetAllSettings")]
+        [HarmonyPostfix]
+        public static void GetAllSettings_Postfix(ref List<Setting> __result)
+        {
+            if (__result != null)
+            {
+                InjectIntoList(__result);
+            }
+        }
+
+        [HarmonyPatch(typeof(SettingsMenu), "SelectTab", new Type[] { typeof(Setting.SettingCategory) })]
+        [HarmonyPrefix]
+        public static void SelectTab_Prefix()
         {
             var settingsField = typeof(Settings).GetField("settings", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
             if (settingsField != null)
