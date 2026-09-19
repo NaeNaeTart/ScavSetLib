@@ -1,6 +1,9 @@
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace ScavSetLib
 {
@@ -94,6 +97,38 @@ namespace ScavSetLib
                 return false; // Skip original game lookup entirely
             }
             return true; // Proceed with native localization lookup
+        }
+
+        /// <summary>
+        /// Fixes TMP_Dropdown popups so dropdown lists are scrollable via mouse wheel and clamped within screen bounds.
+        /// </summary>
+        [HarmonyPatch(typeof(TMP_Dropdown), "Show")]
+        [HarmonyPostfix]
+        public static void TMP_Dropdown_Show_Postfix(TMP_Dropdown __instance)
+        {
+            if (__instance == null) return;
+
+            Transform listTransform = __instance.transform.Find("Dropdown List");
+            if (listTransform == null) return;
+
+            ScrollRect scrollRect = listTransform.GetComponent<ScrollRect>();
+            if (scrollRect != null)
+            {
+                scrollRect.scrollSensitivity = 30f;
+                scrollRect.vertical = true;
+                scrollRect.horizontal = false;
+                scrollRect.movementType = ScrollRect.MovementType.Clamped;
+            }
+
+            RectTransform rect = listTransform.GetComponent<RectTransform>();
+            if (rect != null)
+            {
+                float maxHeight = Mathf.Min(Screen.height * 0.6f, 400f);
+                if (rect.sizeDelta.y > maxHeight)
+                {
+                    rect.sizeDelta = new Vector2(rect.sizeDelta.x, maxHeight);
+                }
+            }
         }
     }
 }
